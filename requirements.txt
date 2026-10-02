@@ -1,0 +1,9 @@
+# PyTorch is installed separately by install.bat (CUDA build for NVIDIA GPUs).
+anthropic>=1.11
+pydantic>=2
+kokoro>=0.9.4
+soundfile
+numpy
+python-dotenv
+imageio-ffmpeg
+gradio>=6

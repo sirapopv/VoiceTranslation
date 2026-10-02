@@ -142,3 +142,51 @@ def translate_cues(
             }
         )
     return out
+
+
+SHORTEN_PROMPT = """\
+You are tightening an English voice-over script so each line fits its time slot.
+For each item, rewrite the English so it has at most max_words words, keeping the
+meaning of the Thai original, the key facts (names, numbers, places), and a natural
+spoken style. Keep text written in Latin letters in the Thai (channel/brand names)
+exactly as written. Return one rewrite per item, in the same order, with the same id.
+"""
+
+
+class Rewrite(BaseModel):
+    id: int
+    english: str
+
+
+class Rewrites(BaseModel):
+    items: list[Rewrite]
+
+
+def shorten_segments(
+    items: list[dict],
+    model: str = DEFAULT_MODEL,
+    client: anthropic.Anthropic | None = None,
+) -> dict[int, str]:
+    """items: [{id, thai, english, max_words}] -> {id: shorter english}."""
+    client = client or anthropic.Anthropic()
+    rows = "\n".join(
+        f"[{it['id']}] max_words={it['max_words']}\n  Thai: {it['thai']}\n  English: {it['english']}"
+        for it in items
+    )
+    response = client.beta.messages.parse(
+        model=model,
+        max_tokens=16000,
+        system=SHORTEN_PROMPT,
+        messages=[{"role": "user", "content": rows}],
+        output_format=Rewrites,
+        betas=["server-side-fallback-2026-07-01"],
+        fallbacks="default",
+    )
+    if response.stop_reason in ("refusal", "max_tokens"):
+        return {}
+    wanted = {it["id"] for it in items}
+    return {
+        r.id: r.english.strip()
+        for r in response.parsed_output.items
+        if r.id in wanted and r.english.strip()
+    }
