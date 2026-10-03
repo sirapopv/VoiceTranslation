@@ -2,6 +2,9 @@
 anthropic>=1.11
 pydantic>=2
 kokoro>=0.9.4
+# Without this floor, some resolvers (uv) backtrack to an ancient transformers
+# that has no prebuilt wheels on macOS.
+transformers>=4.50
 soundfile
 numpy
 python-dotenv
