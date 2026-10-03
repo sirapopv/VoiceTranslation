@@ -203,5 +203,5 @@ VoiceTranslation/
 - [x] ทดสอบอัตโนมัติบน macOS ด้วย GitHub Actions (เครื่อง `macos-14` เป็น Apple Silicon) เพราะเครื่อง Cloud ที่ใช้พัฒนาเป็น Linux
 
 ### Roadmap เวอร์ชัน Mac
-- **Phase M1 (½–1 วัน):** ตัวติดตั้ง + แก้โค้ดให้รันบน Mac ได้ด้วย PyTorch CPU + GitHub Actions ทดสอบบน macOS
+- ✅ **Phase M1 (เสร็จแล้ว — CI ผ่านบน macos-14):** ตัวติดตั้ง + แก้โค้ดให้รันบน Mac ได้ด้วย PyTorch CPU + GitHub Actions ทดสอบบน macOS
 - **Phase M2 (1 วัน):** เพิ่มเอนจิน MLX (`mlx-audio`) เป็นตัวเลือกในหน้าจอ ให้สร้างเสียงเร็วขึ้นบน Mac
