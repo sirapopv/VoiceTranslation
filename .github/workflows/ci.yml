@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Offline tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-14, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements-dev.txt
+      - name: Test
+        run: python -m pytest -q tests
+
+  installer:
+    # Runs the real double-click installers, then renders real Kokoro speech.
+    name: Installer + real voice (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, windows-latest]
+    env:
+      CI: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run install.command (macOS)
+        if: runner.os == 'macOS'
+        run: ./install.command
+      - name: Run install.bat (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: call install.bat
+      - name: Render sample dub with Kokoro (macOS)
+        if: runner.os == 'macOS'
+        run: time .venv/bin/python dub.py voice tests/fixtures/sample.project.json --no-fit
+      - name: Render sample dub with Kokoro (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: .venv\Scripts\python.exe dub.py voice tests\fixtures\sample.project.json --no-fit
+      - name: Check the web UI starts
+        shell: bash
+        run: |
+          PY=.venv/bin/python; [ -x "$PY" ] || PY=.venv/Scripts/python.exe
+          "$PY" -c "import app; app.build_ui(); print('UI OK')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sample-dub-${{ matrix.os }}
+          path: |
+            tests/fixtures/sample.en.mp3
+            tests/fixtures/sample.en.srt

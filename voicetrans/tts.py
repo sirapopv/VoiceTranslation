@@ -7,7 +7,12 @@ implementing the same ``synthesize`` method.
 
 from __future__ import annotations
 
+import os
+
 import numpy as np
+
+# On Apple Silicon, let any PyTorch op that Metal (MPS) lacks fall back to the CPU.
+os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
 
 SAMPLE_RATE = 24_000
 
@@ -49,6 +54,21 @@ KOKORO_VOICES: dict[str, str] = {
 DEFAULT_VOICE = "am_michael"
 
 
+def default_device() -> str:
+    """NVIDIA GPU if present, else CPU.
+
+    On Apple Silicon the CPU is used on purpose: for an 82M-parameter model it is
+    as fast as PyTorch's Metal backend and more reliable. (A faster MLX engine for
+    Mac is planned.) Set VOICETRANS_DEVICE=mps|cpu|cuda to override.
+    """
+    override = os.environ.get("VOICETRANS_DEVICE")
+    if override:
+        return override
+    import torch
+
+    return "cuda" if torch.cuda.is_available() else "cpu"
+
+
 class KokoroTTS:
     """Kokoro-82M wrapper. The model downloads on first use (~330 MB)."""
 
@@ -65,9 +85,7 @@ class KokoroTTS:
             if self._pipelines:
                 model = next(iter(self._pipelines.values())).model
             if model is None:
-                import torch
-
-                device = self.device or ("cuda" if torch.cuda.is_available() else "cpu")
+                device = self.device or default_device()
                 model = KModel(repo_id=KOKORO_REPO).to(device).eval()
             self._pipelines[lang_code] = KPipeline(
                 lang_code=lang_code, repo_id=KOKORO_REPO, model=model
@@ -76,11 +94,12 @@ class KokoroTTS:
 
     @property
     def device_name(self) -> str:
-        import torch
+        device = self.device or default_device()
+        if device == "cuda":
+            import torch
 
-        if self.device:
-            return self.device
-        return f"cuda ({torch.cuda.get_device_name(0)})" if torch.cuda.is_available() else "cpu"
+            return f"cuda ({torch.cuda.get_device_name(0)})"
+        return device
 
     def synthesize(self, text: str, voice: str = DEFAULT_VOICE, speed: float = 1.0) -> np.ndarray:
         """Return mono float32 audio at SAMPLE_RATE."""

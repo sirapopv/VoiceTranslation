@@ -196,11 +196,11 @@ VoiceTranslation/
 ข้อควรรู้: ครั้งแรกที่ดับเบิลคลิก macOS อาจขึ้นเตือนว่า "ไม่รู้จักผู้พัฒนา" ให้คลิกขวาที่ไฟล์ → Open → Open (ทำครั้งเดียว)
 
 ### สิ่งที่ต้องแก้ในโค้ด
-- [ ] `tts.py`: เลือกอุปกรณ์อัตโนมัติ cuda → cpu (Mac ใช้ CPU) และเปิด `PYTORCH_ENABLE_MPS_FALLBACK=1` ไว้กันพลาด
-- [ ] `media.py`: ฟอนต์ซับที่ฝังในวิดีโอ ใช้ Arial ซึ่งมีทั้ง Windows และ Mac (ตรวจซ้ำ)
-- [ ] `install.command` / `start.command` (ใช้ uv)
-- [ ] README: วิธีติดตั้งบน Mac
-- [ ] ทดสอบอัตโนมัติบน macOS ด้วย GitHub Actions (เครื่อง `macos-14` เป็น Apple Silicon) เพราะเครื่อง Cloud ที่ใช้พัฒนาเป็น Linux
+- [x] `tts.py`: เลือกอุปกรณ์อัตโนมัติ cuda → cpu (Mac ใช้ CPU) และเปิด `PYTORCH_ENABLE_MPS_FALLBACK=1` ไว้กันพลาด
+- [x] `media.py`: ฟอนต์ซับที่ฝังในวิดีโอ ใช้ Arial ซึ่งมีทั้ง Windows และ Mac (ตรวจซ้ำ)
+- [x] `install.command` / `start.command` (ใช้ uv)
+- [x] README: วิธีติดตั้งบน Mac
+- [x] ทดสอบอัตโนมัติบน macOS ด้วย GitHub Actions (เครื่อง `macos-14` เป็น Apple Silicon) เพราะเครื่อง Cloud ที่ใช้พัฒนาเป็น Linux
 
 ### Roadmap เวอร์ชัน Mac
 - **Phase M1 (½–1 วัน):** ตัวติดตั้ง + แก้โค้ดให้รันบน Mac ได้ด้วย PyTorch CPU + GitHub Actions ทดสอบบน macOS

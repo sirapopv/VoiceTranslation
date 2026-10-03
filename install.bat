@@ -12,7 +12,7 @@ if errorlevel 1 (
   winget install -e --id Python.Python.3.11 --accept-package-agreements --accept-source-agreements
   echo.
   echo Python installed. Please CLOSE this window and run install.bat again.
-  pause
+  if not defined CI pause
   exit /b 1
 )
 
@@ -52,11 +52,11 @@ echo.
 echo ==============================================
 echo   Done! Double-click start.bat to open the app.
 echo ==============================================
-pause
+if not defined CI pause
 exit /b 0
 
 :fail
 echo.
 echo [X] Installation failed. Scroll up to see the error.
-pause
+if not defined CI pause
 exit /b 1

@@ -1,0 +1,16 @@
+{
+  "source_srt": "sample.th.srt",
+  "model": "manual",
+  "video": null,
+  "voice": "am_michael",
+  "speed": 1.0,
+  "notes": {},
+  "segments": [
+    {"line_ids": [1], "start": 0.16, "end": 1.72, "thai": "นักเตะที่พูดได้ 6 ภาษา", "english": "A footballer who spoke six languages."},
+    {"line_ids": [2], "start": 2.16, "end": 4.08, "thai": "คว้าแชมป์ยูฟ่าได้ 4 สมัย", "english": "Four-time Champions League winner,"},
+    {"line_ids": [3, 4, 5, 6], "start": 4.08, "end": 8.1, "thai": "และเป็นคนเดียว ในประวัติศาสตร์ ที่คว้าแชมเปี้ยนส์ลีก ได้กับ 3 สโมสร", "english": "and the only player in history to win it with three different clubs."},
+    {"line_ids": [7, 8], "start": 8.1, "end": 10.26, "thai": "แฟนบอลรุ่นใหม่ อาจจะไม่รู้จักชื่อเขา", "english": "Younger fans might not know his name,"},
+    {"line_ids": [9, 10, 11, 12], "start": 10.26, "end": 14.18, "thai": "ทั้งๆ ที่ไม่มีใคร ในประวัติศาสตร์ สามารถทำสิ่งที่เขา เคยทำได้เลย", "english": "yet no one in history has done what he did."},
+    {"line_ids": [13, 14], "start": 14.18, "end": 16.98, "thai": "และชื่อของเขาคือ Clarence Seedorf", "english": "His name is Clarence Seedorf."}
+  ]
+}
